@@ -15,6 +15,7 @@ from src.analytics.spend_analysis import (
 )
 from src.analytics.trends import monthly_procurement_trends
 from src.analytics.supplier_segmentation import supplier_scorecard
+from src.ml.anomaly_detection import detect_cost_anomalies
 
 
 st.set_page_config(
@@ -83,6 +84,69 @@ col2.metric("Budgeted Cost", f"€{total_budget:,.0f}")
 col3.metric("Cost Variance", f"€{total_variance:,.0f}")
 col4.metric("PO Count", f"{po_count:,}")
 col5.metric("Avg Lead Time", f"{avg_lead_time:.1f} days")
+
+st.divider()
+
+# Anomaly Detection
+st.subheader("Cost Anomaly Detection")
+
+if len(filtered_df) > 10:
+    anomaly_df = detect_cost_anomalies(filtered_df)
+
+    anomaly_count = anomaly_df["Is_Anomaly"].sum()
+    anomaly_rate = anomaly_count / len(anomaly_df) * 100
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Detected Anomalies", f"{anomaly_count}")
+    col2.metric("Anomaly Rate", f"{anomaly_rate:.1f}%")
+    col3.metric(
+        "Highest Unit Cost vs Category Median",
+        f"{anomaly_df['Unit_Cost_vs_Category_Median'].max():.2f}x",
+    )
+
+    anomaly_records = anomaly_df[anomaly_df["Is_Anomaly"]].copy()
+
+    if not anomaly_records.empty:
+        fig_anomaly = px.scatter(
+            anomaly_df,
+            x="Unit_Cost",
+            y="Total_Cost",
+            color="Anomaly_Label",
+            size="Quantity",
+            hover_data=[
+                "PO_Number",
+                "Project_Name",
+                "Supplier_Name",
+                "Material_Category",
+                "Cost_Variance_Pct",
+                "Lead_Time_Days",
+            ],
+            title="Cost Anomaly Detection: Unit Cost vs Total Cost",
+        )
+
+        st.plotly_chart(fig_anomaly, width="stretch")
+
+        st.dataframe(
+            anomaly_records[
+                [
+                    "PO_Number",
+                    "Project_Name",
+                    "Supplier_Name",
+                    "Material_Category",
+                    "Unit_Cost",
+                    "Total_Cost",
+                    "Cost_Variance_Pct",
+                    "Lead_Time_Days",
+                    "Unit_Cost_vs_Category_Median",
+                    "Anomaly_Label",
+                ]
+            ].head(20),
+            width="stretch",
+        )
+    else:
+        st.success("No major cost anomalies detected for the selected filters.")
+else:
+    st.info("Not enough filtered records to run anomaly detection.")
 
 st.divider()
 
