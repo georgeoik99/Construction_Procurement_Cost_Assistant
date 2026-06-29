@@ -16,7 +16,7 @@ from src.analytics.spend_analysis import (
 from src.analytics.trends import monthly_procurement_trends
 from src.analytics.supplier_segmentation import supplier_scorecard
 from src.ml.anomaly_detection import detect_cost_anomalies
-
+from src.assistant.mock_llm import ask_procurement_assistant
 
 st.set_page_config(
     page_title="Construction Procurement & Cost Assistant",
@@ -211,8 +211,8 @@ with right_col:
 st.divider()
 
 # Tables
-tab1, tab2, tab3 = st.tabs(
-    ["Cost Overruns", "Supplier Scorecard", "Raw Data Preview"]
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["Cost Overruns", "Supplier Scorecard", "Raw Data Preview", "AI Assistant"]
 )
 
 with tab1:
@@ -232,3 +232,38 @@ with tab2:
 with tab3:
     st.subheader("Dataset Preview")
     st.dataframe(filtered_df.head(100), width="stretch")
+
+with tab4:
+    st.subheader("AI Procurement & Cost Assistant")
+    st.caption(
+        "Ask business questions about suppliers, projects, cost overruns, lead times, anomalies, and trends."
+    )
+
+    example_questions = [
+        "Which suppliers have the highest spend?",
+        "Which projects have the highest procurement cost?",
+        "Which projects are above budget?",
+        "Which material categories have the longest lead times?",
+        "Which suppliers should be monitored?",
+        "Show monthly procurement trends.",
+        "Find unusual cost increases.",
+        "Summarize procurement insights.",
+    ]
+
+    selected_example = st.selectbox(
+        "Example questions",
+        options=[""] + example_questions,
+    )
+
+    user_query = st.text_input(
+        "Ask a question",
+        value=selected_example,
+        placeholder="Example: Which suppliers have the highest spend?",
+    )
+
+    if st.button("Ask Assistant"):
+        if user_query.strip():
+            response = ask_procurement_assistant(user_query, filtered_df)
+            st.markdown(response)
+        else:
+            st.warning("Please enter a question.")
