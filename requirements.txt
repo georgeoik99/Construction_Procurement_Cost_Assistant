@@ -7,3 +7,6 @@ openpyxl
 pytest
 python-dotenv
 sqlalchemy
+fastapi
+uvicorn[standard]
+jinja2

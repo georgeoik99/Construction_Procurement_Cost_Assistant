@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Construction Procurement & Cost Assistant</title>
+
+    <link
+        rel="icon"
+        href="data:,"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+    >
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                C
+            </div>
+
+            <div>
+                <h1>ConstructAI</h1>
+
+                <span>
+                    Procurement Intelligence
+                </span>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <button
+                class="nav-item active"
+                data-target="dashboard-section"
+            >
+                <span>▦</span>
+                Dashboard
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-target="cost-analytics-section"
+            >
+                <span>⌁</span>
+                Cost Analytics
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-target="risk-monitor-section"
+            >
+                <span>△</span>
+                Risk Monitor
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-target="suppliers-section"
+            >
+                <span>◎</span>
+                Suppliers
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-section">
+
+            <p class="sidebar-label">
+                FILTERS
+            </p>
+
+
+            <label for="project-filter">
+                Project
+            </label>
+
+            <select id="project-filter">
+
+                <option value="">
+                    All projects
+                </option>
+
+            </select>
+
+
+            <label for="category-filter">
+                Material Category
+            </label>
+
+            <select id="category-filter">
+
+                <option value="">
+                    All categories
+                </option>
+
+            </select>
+
+
+            <label for="risk-filter">
+                Risk Level
+            </label>
+
+            <select id="risk-filter">
+
+                <option value="">
+                    All risk levels
+                </option>
+
+            </select>
+
+
+            <button
+                id="apply-filters"
+                class="primary-button"
+            >
+                Apply Filters
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-footer">
+
+            <div class="status-dot"></div>
+
+            <span>
+                Analytics engine online
+            </span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN DASHBOARD -->
+
+    <main class="dashboard">
+
+        <section
+            id="dashboard-section"
+            class="page-section"
+        >
+
+            <header class="topbar">
+
+                <div>
+
+                    <p class="eyebrow">
+                        CONSTRUCTION INTELLIGENCE
+                    </p>
+
+                    <h2>
+                        Procurement & Cost Overview
+                    </h2>
+
+                    <p class="header-subtitle">
+                        Monitor project costs, supplier exposure and procurement anomalies.
+                    </p>
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    <button
+                        id="refresh-button"
+                        class="secondary-button"
+                    >
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <section class="kpi-grid">
+
+                <article class="kpi-card">
+
+                    <div class="kpi-header">
+                        <span>Total Cost</span>
+                        <span class="kpi-icon">€</span>
+                    </div>
+
+                    <strong id="total-cost">
+                        --
+                    </strong>
+
+                    <small>
+                        Actual procurement spend
+                    </small>
+
+                </article>
+
+
+                <article class="kpi-card">
+
+                    <div class="kpi-header">
+                        <span>Budgeted Cost</span>
+                        <span class="kpi-icon">◫</span>
+                    </div>
+
+                    <strong id="budgeted-cost">
+                        --
+                    </strong>
+
+                    <small>
+                        Approved project budget
+                    </small>
+
+                </article>
+
+
+                <article class="kpi-card">
+
+                    <div class="kpi-header">
+                        <span>Cost Variance</span>
+                        <span class="kpi-icon">↗</span>
+                    </div>
+
+                    <strong id="cost-variance">
+                        --
+                    </strong>
+
+                    <small>
+                        Actual vs budget
+                    </small>
+
+                </article>
+
+
+                <article class="kpi-card">
+
+                    <div class="kpi-header">
+                        <span>Purchase Orders</span>
+                        <span class="kpi-icon">#</span>
+                    </div>
+
+                    <strong id="po-count">
+                        --
+                    </strong>
+
+                    <small>
+                        Unique PO records
+                    </small>
+
+                </article>
+
+
+                <article class="kpi-card">
+
+                    <div class="kpi-header">
+                        <span>Average Lead Time</span>
+                        <span class="kpi-icon">◷</span>
+                    </div>
+
+                    <strong id="avg-lead-time">
+                        --
+                    </strong>
+
+                    <small>
+                        Average delivery cycle
+                    </small>
+
+                </article>
+
+            </section>
+
+        </section>
+
+
+        <!-- COST ANALYTICS -->
+
+        <section
+            id="cost-analytics-section"
+            class="page-section"
+        >
+
+            <section class="chart-grid">
+
+                <article class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                SUPPLIER ANALYTICS
+                            </p>
+
+                            <h3>
+                                Top Suppliers by Cost
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="supplier-chart"
+                        class="chart"
+                    ></div>
+
+                </article>
+
+
+                <article class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                PROJECT ANALYTICS
+                            </p>
+
+                            <h3>
+                                Top Projects by Cost
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="project-chart"
+                        class="chart"
+                    ></div>
+
+                </article>
+
+            </section>
+
+
+            <section class="chart-grid">
+
+                <article class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                PROCUREMENT TREND
+                            </p>
+
+                            <h3>
+                                Monthly Cost Trend
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="trend-chart"
+                        class="chart"
+                    ></div>
+
+                </article>
+
+
+                <article class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="panel-label">
+                                CATEGORY MIX
+                            </p>
+
+                            <h3>
+                                Cost by Material Category
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="category-chart"
+                        class="chart"
+                    ></div>
+
+                </article>
+
+            </section>
+
+        </section>
+
+
+        <!-- RISK / ML -->
+
+        <section
+            id="risk-monitor-section"
+            class="panel anomaly-panel page-section"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        MACHINE LEARNING
+                    </p>
+
+                    <h3>
+                        Cost Anomaly Detection
+                    </h3>
+
+                </div>
+
+
+                <span class="model-badge">
+                    Isolation Forest
+                </span>
+
+            </div>
+
+
+            <div class="anomaly-kpis">
+
+                <div>
+
+                    <span>
+                        Detected Anomalies
+                    </span>
+
+                    <strong id="anomaly-count">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Anomaly Rate
+                    </span>
+
+                    <strong id="anomaly-rate">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Highest Cost Ratio
+                    </span>
+
+                    <strong id="highest-cost-ratio">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="anomaly-chart"
+                class="large-chart"
+            ></div>
+
+        </section>
+
+
+        <!-- DATA TABLES -->
+
+        <section
+            id="suppliers-section"
+            class="panel data-panel page-section"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="panel-label">
+                        OPERATIONAL DATA
+                    </p>
+
+                    <h3>
+                        Procurement Analysis Tables
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-tabs">
+
+                <button
+                    class="table-tab active"
+                    data-tab="overruns-table-panel"
+                >
+                    Cost Overruns
+                </button>
+
+
+                <button
+                    class="table-tab"
+                    data-tab="supplier-table-panel"
+                >
+                    Supplier Scorecard
+                </button>
+
+
+                <button
+                    class="table-tab"
+                    data-tab="raw-table-panel"
+                >
+                    Raw Data Preview
+                </button>
+
+            </div>
+
+
+            <div
+                id="overruns-table-panel"
+                class="table-panel active"
+            >
+
+                <div
+                    id="cost-overruns-table"
+                    class="table-wrapper"
+                ></div>
+
+            </div>
+
+
+            <div
+                id="supplier-table-panel"
+                class="table-panel"
+            >
+
+                <div
+                    id="supplier-scorecard-table"
+                    class="table-wrapper"
+                ></div>
+
+            </div>
+
+
+            <div
+                id="raw-table-panel"
+                class="table-panel"
+            >
+
+                <div
+                    id="raw-data-table"
+                    class="table-wrapper"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- AI ASSISTANT -->
+
+    <aside class="assistant-panel">
+
+        <div class="assistant-header">
+
+            <div class="assistant-avatar">
+                AI
+            </div>
+
+
+            <div>
+
+                <h3>
+                    AI Insights
+                </h3>
+
+                <span>
+                    Procurement Copilot
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="chat-messages"
+            class="chat-messages"
+        >
+
+            <div class="message assistant-message">
+
+                Hello. I can analyse supplier exposure, project costs,
+                overruns, lead times and unusual procurement records.
+
+            </div>
+
+        </div>
+
+
+        <div class="suggestions">
+
+            <button
+                id="suggestion-toggle"
+                class="suggestion-toggle"
+            >
+
+                Suggested questions
+
+                <span>
+                    ⌄
+                </span>
+
+            </button>
+
+
+            <div
+                id="suggestion-menu"
+                class="suggestion-menu hidden"
+            >
+
+                <button
+                    data-question="Which projects are above budget?"
+                >
+                    Projects above budget
+                </button>
+
+
+                <button
+                    data-question="Which suppliers should be monitored?"
+                >
+                    Suppliers to monitor
+                </button>
+
+
+                <button
+                    data-question="Find unusual cost increases."
+                >
+                    Unusual cost increases
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <form
+            id="assistant-form"
+            class="assistant-form"
+        >
+
+            <textarea
+                id="assistant-input"
+                placeholder="Ask about your procurement data..."
+                rows="3"
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="send-button"
+            >
+                Ask AI
+            </button>
+
+        </form>
+
+    </aside>
+
+</div>
+
+
+<script src="/static/js/app.js"></script>
+
+</body>
+
+</html>
