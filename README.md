@@ -4,6 +4,33 @@ A production-oriented AI and analytics application for construction procurement 
 
 This project helps construction, procurement, and cost-control teams analyze purchasing data, identify supplier and contractor risks, detect unusual cost increases, monitor project budget overruns, and generate business insights through an interactive dashboard and a natural language assistant.
 
+## Application Preview
+
+### Dashboard Overview
+The main dashboard provides a consolidated view of construction procurement and project cost performance, including total procurement cost, budgeted cost, cost variance, purchase order activity, supplier exposure, project spend, monthly cost trends, and material category distribution.
+
+The integrated AI Insights Assistant allows users to ask business-oriented questions directly against the procurement analytics layer.
+
+![Dashboard Overview](screenshots/1dashboard-overview.png)
+
+
+### Machine Learning Anomaly Detection
+
+The application integrates an Isolation Forest anomaly detection model to identify unusual procurement records based on cost, quantity, budget variance, and lead-time behaviour.
+
+![Anomaly Detection](screenshots/2anomaly-detection.png)
+
+### AI Insights Assistant
+
+Operational procurement records can be reviewed through interactive analysis tables 
+covering cost overruns, supplier risk scoring, and raw procurement data.
+
+![AI Insights Assistant](screenshots/3data-table.png)
+
+
+
+
+
 ## Project Goal
 
 The goal of this project is to demonstrate an end-to-end AI Engineering and ML Engineering workflow in a practical business context.
